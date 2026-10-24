@@ -117,12 +117,12 @@
                 <div class="h-3 w-px bg-slate-800"></div>
                 <div class="flex items-center space-x-2">
                     <span id="cloud-status-dot" class="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse"></span>
-                    <span id="syncStatusText" class="font-semibold text-blue-400">Local Network Sync Active</span>
+                    <span id="syncStatusText" class="font-semibold text-blue-400">Connecting Database...</span>
                 </div>
                 <div class="h-3 w-px bg-slate-800"></div>
                 <div class="flex items-center space-x-1.5 text-slate-400 text-[11px]">
                     <i class="fa-solid fa-database text-blue-400 group-hover:scale-110 transition"></i>
-                    <span class="font-mono text-slate-300 font-bold">Database</span>
+                    <span class="font-mono text-slate-300 font-bold">fir-maintenance-91c69</span>
                 </div>
             </div>
 
@@ -1154,7 +1154,7 @@
                 </div>
                 <div>
                     <h3 class="text-base font-bold text-white">Database Connectivity & Sync Setup</h3>
-                    <p class="text-xs text-slate-400">Local Network Broadcast + Firebase Cloud Database Synchronization</p>
+                    <p class="text-xs text-slate-400">Firebase Project: <code class="text-blue-300 font-mono">fir-maintenance-91c69</code></p>
                 </div>
             </div>
 
@@ -1162,24 +1162,15 @@
             <div id="syncDiagnosticBox" class="p-3.5 bg-blue-950/40 border border-blue-800/60 rounded-xl space-y-1.5">
                 <div class="font-bold text-blue-300 flex items-center space-x-2">
                     <i class="fa-solid fa-network-wired text-blue-400"></i>
-                    <span>Local Network Broadcast Sync Active</span>
+                    <span>Initializing Firebase Real-Time Synchronization...</span>
                 </div>
-                <p class="text-slate-300 text-[11px] leading-relaxed">Updates synchronize automatically across all open browser tabs and windows on your local domain. Paste a Firebase config snippet below to activate multi-device cloud synchronization.</p>
+                <p class="text-slate-300 text-[11px] leading-relaxed">Connecting to project <code class="bg-factory-800 text-blue-300 px-1 rounded font-mono">fir-maintenance-91c69</code>. Ensure Anonymous Auth & Firestore Read/Write rules are enabled in your console.</p>
             </div>
 
             <div class="p-3.5 bg-factory-900 border border-slate-800 rounded-xl space-y-2">
                 <label class="block font-bold text-slate-200">Firebase Configuration Code / JSON</label>
-                <p class="text-slate-400 leading-relaxed text-[11px]">Paste directly from Firebase Console (JSON format or JavaScript snippet e.g. <code class="bg-factory-800 text-blue-300 px-1 py-0.5 rounded">const firebaseConfig = { ... }</code>):</p>
-                <textarea id="custom-firebase-json" rows="5" placeholder='Paste from Firebase Console, e.g.:
-
-const firebaseConfig = {
-  apiKey: "AIzaSy...",
-  authDomain: "sml-factory.firebaseapp.com",
-  projectId: "sml-factory",
-  storageBucket: "sml-factory.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abcdef"
-};' class="w-full bg-factory-800 border border-slate-700 rounded-lg p-2.5 font-mono text-[10px] text-slate-200 focus:outline-none focus:border-blue-500"></textarea>
+                <p class="text-slate-400 leading-relaxed text-[11px]">Connected Firebase API configuration:</p>
+                <textarea id="custom-firebase-json" rows="8" placeholder="Paste from Firebase Console..." class="w-full bg-factory-800 border border-slate-700 rounded-lg p-2.5 font-mono text-[10px] text-slate-200 focus:outline-none focus:border-blue-500"></textarea>
                 <div class="flex items-center justify-between pt-1">
                     <button onclick="clearCustomFirebaseConfig()" class="text-rose-400 hover:text-rose-300 font-semibold underline text-[11px]">
                         Disconnect / Reset Custom Config
@@ -1232,8 +1223,16 @@ const firebaseConfig = {
         const ADMIN_CLEAR_PASSWORD = 'admin123';
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'sml-global-plant';
 
-        // Embedded default Firebase config fallback (Optional)
-        const DEFAULT_FIREBASE_CONFIG = {};
+        // Embedded default Firebase config fallback
+        const DEFAULT_FIREBASE_CONFIG = {
+            apiKey: "AIzaSyDa1H7lHQfWKRbU4gTRwgNWJYM_it3XYgo",
+            authDomain: "fir-maintenance-91c69.firebaseapp.com",
+            projectId: "fir-maintenance-91c69",
+            storageBucket: "fir-maintenance-91c69.firebasestorage.app",
+            messagingSenderId: "924577290259",
+            appId: "1:924577290259:web:857268836fdf20162587e6",
+            measurementId: "G-S3J81V75KR"
+        };
 
         // Safe Storage Wrappers
         function getSafeStorage(key) {
@@ -1383,7 +1382,7 @@ const firebaseConfig = {
                     diagBox.innerHTML = `
                         <div class="font-bold text-emerald-300 flex items-center space-x-2">
                             <i class="fa-solid fa-cloud-check text-emerald-400"></i>
-                            <span>Firebase Cloud Real-Time Database Connected</span>
+                            <span>Firebase Cloud Database Connected (fir-maintenance-91c69)</span>
                         </div>
                         <p class="text-slate-300 text-[11px] leading-relaxed">All work order updates, downtime logs, and roster modifications stream instantly across all connected factory tablets and computers in real time.</p>
                     `;
@@ -1415,7 +1414,7 @@ const firebaseConfig = {
                             <i class="fa-solid fa-network-wired text-blue-400"></i>
                             <span>Local Network Broadcast Sync Active</span>
                         </div>
-                        <p class="text-slate-300 text-[11px] leading-relaxed">Updates synchronize automatically across all open browser tabs and windows on your local domain. Paste a Firebase config snippet below to activate multi-device cloud synchronization.</p>
+                        <p class="text-slate-300 text-[11px] leading-relaxed">Updates synchronize automatically across all open browser tabs and windows on your local domain.</p>
                     `;
                 }
             }
@@ -1442,15 +1441,17 @@ const firebaseConfig = {
             const storageBucket = extractKey('storageBucket');
             const messagingSenderId = extractKey('messagingSenderId');
             const appIdKey = extractKey('appId');
+            const measurementId = extractKey('measurementId');
 
             if (apiKey && projectId) {
                 return {
                     apiKey,
                     authDomain: authDomain || `${projectId}.firebaseapp.com`,
                     projectId,
-                    storageBucket: storageBucket || `${projectId}.appspot.com`,
+                    storageBucket: storageBucket || `${projectId}.firebasestorage.app`,
                     messagingSenderId: messagingSenderId || '',
-                    appId: appIdKey || ''
+                    appId: appIdKey || '',
+                    measurementId: measurementId || ''
                 };
             }
 
@@ -1647,11 +1648,15 @@ const firebaseConfig = {
         function toggleFirebaseModal() {
             const customConfigRaw = getSafeStorage('sml_custom_firebase_json');
             const jsonInput = document.getElementById('custom-firebase-json');
-            if (jsonInput && customConfigRaw) {
-                try {
-                    jsonInput.value = JSON.stringify(JSON.parse(customConfigRaw), null, 2);
-                } catch(e) {
-                    jsonInput.value = customConfigRaw;
+            if (jsonInput) {
+                if (customConfigRaw) {
+                    try {
+                        jsonInput.value = JSON.stringify(JSON.parse(customConfigRaw), null, 2);
+                    } catch(e) {
+                        jsonInput.value = customConfigRaw;
+                    }
+                } else if (DEFAULT_FIREBASE_CONFIG && DEFAULT_FIREBASE_CONFIG.apiKey) {
+                    jsonInput.value = JSON.stringify(DEFAULT_FIREBASE_CONFIG, null, 2);
                 }
             }
             document.getElementById('modal-firebase-config')?.classList.toggle('hidden');
@@ -1679,7 +1684,7 @@ const firebaseConfig = {
             auth = null;
             currentUser = null;
             updateCloudUIStatus(false, "Local Network Sync Active");
-            showToast("Disconnected from Firebase Cloud. Reverted to Local Network mode.", "info");
+            showToast("Disconnected custom Firebase Cloud settings. Reverted to default database config.", "info");
             toggleFirebaseModal();
         }
 
@@ -2140,7 +2145,7 @@ const firebaseConfig = {
 
             const filtered = weekendOtJobs.filter(ot => {
                 const matchDate = !dateFilter || ot.weekendDate === dateFilter;
-                const matchStatus = statusFilter === 'ALL' || ot.status === statusFilter;
+                const matchStatus = statusFilter === 'ALL' || ot.status === statusStatus;
                 const matchTech = techFilter === 'ALL' || ot.leadTech === techFilter || (ot.supportTechs && ot.supportTechs.includes(techFilter));
                 return matchDate && matchStatus && matchTech;
             });
