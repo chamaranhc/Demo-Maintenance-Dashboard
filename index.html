@@ -4619,6 +4619,9 @@
                     pmSchedules = parsed.pmSchedules || defaultPmSchedules;
                     weekendOtJobs = parsed.weekendOtJobs || defaultWeekendOtJobs;
                     deleteLog = parsed.deleteLog || [];
+                    if (parsed.updatedAt) {
+                        lastAppliedUpdatedAt = parsed.updatedAt;
+                    }
                 } catch(e) {
                     loadDefaults();
                 }
@@ -4688,14 +4691,31 @@
         }
 
         function applySyncedData(data, saveToLocal = true) {
-            if (!data) return;
+            if (!data || !data.updatedAt) return;
 
-            if (data.updatedAt && data.updatedAt === lastAppliedUpdatedAt) {
+            // Retrieve current local timestamp to guard against older cloud snapshots overwriting fresh local edits
+            const localSaved = getSafeStorage(STORAGE_KEY);
+            let localUpdatedAt = lastAppliedUpdatedAt;
+            if (localSaved) {
+                try {
+                    const parsedLocal = JSON.parse(localSaved);
+                    if (parsedLocal.updatedAt) {
+                        localUpdatedAt = parsedLocal.updatedAt;
+                    }
+                } catch(e) {}
+            }
+
+            // If incoming cloud data is older than current local storage, push local state back to cloud
+            if (localUpdatedAt && new Date(data.updatedAt) < new Date(localUpdatedAt)) {
+                console.log("Local state is newer than cloud snapshot. Preserving local state and pushing to cloud.");
+                saveToCloudAndLocal();
                 return;
             }
-            if (data.updatedAt) {
-                lastAppliedUpdatedAt = data.updatedAt;
+
+            if (data.updatedAt === lastAppliedUpdatedAt) {
+                return;
             }
+            lastAppliedUpdatedAt = data.updatedAt;
 
             if (data.equipmentList) equipmentList = data.equipmentList;
             if (data.technicianList) technicianList = data.technicianList;
