@@ -4620,15 +4620,18 @@
             updateCharts();
         }
 
-        // Real-time clock & live duration updater interval
+        // Real-time clock interval (1 second)
         setInterval(() => {
             const liveTimeEl = document.getElementById('live-time');
             if (liveTimeEl) liveTimeEl.innerText = new Date().toLocaleTimeString();
-            
+        }, 1000);
+
+        // 10-Second Active Job Live Duration & UI Refresh Interval
+        setInterval(() => {
             if (activeJobs.length > 0) {
                 renderActiveJobs();
             }
-        }, 1000);
+        }, 10000);
 
         window.onload = function() {
             const savedUser = getSafeStorage('sml_active_user_session');
